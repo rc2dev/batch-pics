@@ -1,0 +1,15 @@
+#
+# Copyright (C) 2020 Rafael Cavalcanti - rafaelc.org
+# Licensed under GPLv3
+#
+
+[Nemo Action]
+Name=Batch edit pictures
+Name[pt_BR]=Operar imagens
+Exec=batch-pics %F
+Icon-Name=image-crop
+Selection=notnone
+Extensions=nodirs
+Mimetypes=image/*;
+Quote=double
+Dependencies=batch-pics;convert
