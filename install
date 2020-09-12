@@ -10,8 +10,9 @@ set -euo pipefail
 readonly script_name="$(basename "$0")"
 readonly script_dir="$(dirname "$(readlink -f "$0")")"
 
-if [[ -z $1 ]]; then
+if [[ -z ${1:-} ]]; then
   printf "Usage: %s target_user\n" "$script_name"
+  exit 1
 fi
 
 readonly user="$1"
