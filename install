@@ -21,6 +21,6 @@ printf "Installing dependencies...\n"
 sudo apt install -y imagemagick zenity
 
 printf "Creating symlinks...\n"
-sudo ln -sf "$script_dir/batch-pics" /usr/local/bin
-sudo -u "$user" ln -sf "$script_dir/batch-pics.nemo_action" "$home/.local/share/nemo/actions/"
+sudo ln -sf "$script_dir/bin/batch-pics" /usr/local/bin
+sudo -u "$user" ln -sf "$script_dir/share/batch-pics.nemo_action" "$home/.local/share/nemo/actions/"
 
