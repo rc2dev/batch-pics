@@ -63,7 +63,7 @@ filter_args() {
 
 get_options() {
 	local -r options="$(zenity --title "Operar imagens" --forms \
-		--add-combo "Novo tamanho" --combo-values "30%|50%|70%" \
+		--add-combo "Novo tamanho" --combo-values "30%|50%|70%|200%|400%" \
 		--add-combo "Girar" --combo-values "90º|180º|270º" \
 		--add-combo "Logo" --combo-values "Com logo")"
 
