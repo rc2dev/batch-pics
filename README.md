@@ -6,4 +6,4 @@ Run batch operations on selected pictures.
 
 Licensed under [GPLv3](LICENSE)
 
-Copyright (C) 2018-2020 [Rafael Cavalcanti](https://rafaelc.org/)
+Copyright (C) 2018-2020 [Rafael Cavalcanti](https://rafaelc.org/dev)
