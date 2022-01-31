@@ -2,26 +2,17 @@
 #
 # Installation script for batch-pics.
 #
-# Copyright (C) 2020 Rafael Cavalcanti - rafaelc.org
+# Copyright (C) 2020, 2022 Rafael Cavalcanti - rafaelc.org
 # Licensed under GPLv3
 
 set -euo pipefail
 
-readonly script_name="$(basename "$0")"
 readonly script_dir="$(dirname "$(readlink -f "$0")")"
-
-if [[ -z ${1:-} ]]; then
-  printf "Usage: %s target_user\n" "$script_name"
-  exit 1
-fi
-
-readonly user="$1"
-readonly home="$(getent passwd "$user" | cut -f6 -d:)"
 
 printf "Installing dependencies...\n"
 sudo apt install -y imagemagick zenity
 
 printf "Creating symlinks...\n"
-sudo ln -sf "$script_dir/bin/batch-pics" /usr/local/bin
-sudo -u "$user" ln -sf "$script_dir/share/batch-pics.nemo_action" "$home/.local/share/nemo/actions/"
+ln -sf "$script_dir/bin/batch-pics" "$HOME/.local/bin"
+ln -sf "$script_dir/share/batch-pics.nemo_action" "$HOME/.local/share/nemo/actions/"
 
