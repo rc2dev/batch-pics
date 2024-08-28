@@ -7,15 +7,18 @@
 # Licensed under GPLv3
 
 set -euo pipefail
+set -x
 
 readonly script_name="$(basename "$0")"
 readonly script_dir="$(dirname "$(readlink -f "$0")")"
-readonly logo_path="$script_dir/../share/logo.png"
+readonly logo_romildo_path="$script_dir/../share/logo_romildo.png"
+readonly logo_jrn_path="$script_dir/../share/logo_jrn.png"
 
 declare -a pics
 declare ratio
 declare rotation
-declare add_logo
+declare add_logo_romildo
+declare add_logo_jrn
 
 
 main() {
@@ -45,8 +48,11 @@ check_args() {
 }
 
 check_deps() {
-	if [[ ! -f "$logo_path" ]]; then
-		zenity --error --text "Logo não encontrado."
+	if [[ ! -f "$logo_romildo_path" ]]; then
+		zenity --error --text "Logo Romildo não encontrado."
+		exit 1
+	elif [[ ! -f "$logo_jrn_path" ]]; then
+		zenity --error --text "Logo JRN não encontrado."
 		exit 1
 	fi
 }
@@ -65,20 +71,22 @@ get_options() {
 	local -r options="$(zenity --title "Operar imagens" --forms \
 		--add-combo "Novo tamanho" --combo-values "30%|50%|70%|200%|400%" \
 		--add-combo "Girar" --combo-values "90º|180º|270º" \
-		--add-combo "Logo" --combo-values "Com logo")"
+		--add-combo "Logo Romildo" --combo-values "Com logo Romildo" \
+		--add-combo "Logo JRN" --combo-values "Com logo JRN")"
 
-	IFS="|" read -r ratio rotation add_logo <<< "$options"
+	IFS="|" read -r ratio rotation add_logo_romildo add_logo_jrn <<< "$options"
 
 	# Always be an empty string if no option provided.
 	ratio=${ratio/# /}
 	rotation=${rotation/# /}
-	add_logo=${add_logo/# /}
+	add_logo_romildo=${add_logo_romildo/# /}
+	add_logo_jrn=${add_logo_jrn/# /}
 }
 
 get_dir_out() {
 	local -r dir_input="$(dirname "${pics[0]}")"
 
-	local name="${ratio:+$ratio - }${rotation:+$rotation - }${add_logo:+ $add_logo - }"
+	local name="${ratio:+$ratio - }${rotation:+$rotation - }${add_logo_romildo:+$add_logo_romildo - }${add_logo_jrn:+$add_logo_jrn - }"
 	name="${name/% - /}"
 
 	printf "%s/%s" "$dir_input" "$name"
@@ -88,7 +96,7 @@ operate() {
 	local -r dir_out="$(get_dir_out)"
 	local pic_out
 
-	if [[ -z "$ratio" && -z "$rotation" && -z "$add_logo" ]]; then
+	if [[ -z "$ratio" && -z "$rotation" && -z "$add_logo_romildo" && -z "$add_logo_jrn" ]]; then
 		return 0
 	fi
 
@@ -106,8 +114,12 @@ operate() {
 			convert -rotate "${rotation/º/}" "$pic_out" "$pic_out"
 		fi
 
-		if [[ -n "$add_logo" ]]; then
-			blend_logo "$pic_out" "$pic_out"
+		if [[ -n "$add_logo_romildo" ]]; then
+			blend_logo_romildo "$pic_out" "$pic_out"
+		fi
+
+		if [[ -n "$add_logo_jrn" ]]; then
+			blend_logo_jrn "$pic_out" "$pic_out"
 		fi
 	done
 }
@@ -119,13 +131,23 @@ is_image() {
 	[[ "$mimetype" =~ ^image* ]]
 }
 
-blend_logo() {
+blend_logo_romildo() {
 	local -r input="$1"
 	local -r output="$2"
 
-	convert "$input" "$logo_path" \
+	convert "$input" "$logo_romildo_path" \
 		+distort affine "0,0 0,0 %[w],%[h] %[fx:t?v.w*(u.h/v.h*0.1):s.w],%[fx:t?v.h*(u.h/v.h*0.1):s.h]" \
 		-shave 1 -gravity Center -geometry +20+20 -composite \
+		"$output"
+}
+
+blend_logo_jrn() {
+	local -r input="$1"
+	local -r output="$2"
+
+	convert "$input" "$logo_jrn_path" \
+		+distort affine "0,0 0,0 %[w],%[h] %[fx:t?v.w*(u.h/v.h*0.1):s.w],%[fx:t?v.h*(u.h/v.h*0.1):s.h]" \
+		-shave 1 -gravity Northwest -geometry +20+20 -composite \
 		"$output"
 }
 
