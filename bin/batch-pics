@@ -147,7 +147,7 @@ blend_logo_jrn() {
 
 	convert "$input" "$logo_jrn_path" \
 		+distort affine "0,0 0,0 %[w],%[h] %[fx:t?v.w*(u.h/v.h*0.1):s.w],%[fx:t?v.h*(u.h/v.h*0.1):s.h]" \
-		-shave 1 -gravity Northwest -geometry +20+20 -composite \
+		-shave 1 -gravity Northwest -geometry +90+90 -composite \
 		"$output"
 }
 
